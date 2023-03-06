@@ -2,6 +2,7 @@ const express = require('express')
 const dotenv = require('dotenv')
 const morgan = require('morgan')
 const colors = require('colors')
+const errorhandler = require('./middleware/error')
 const connectDB = require('./config/db')
 
 // Load config vars
@@ -12,6 +13,9 @@ connectDB()
 
 const app = express()
 
+// Body parser
+app.use(express.json())
+
 // Dev logging midleware
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
@@ -19,6 +23,8 @@ if (process.env.NODE_ENV === 'development') {
 
 // define routes
 app.use('/api/v1/bootcamps', require('./routes/bootcamps'))
+
+app.use(errorhandler)
 
 const PORT = process.env.PORT || 5000
 
