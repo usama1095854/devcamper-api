@@ -4,10 +4,12 @@ const ErrorResponse = require('../utils/errorResponse')
 const User = require('../models/User')
 
 exports.protect = asyncHandler(async (req, res, next) => {
-  const token = req.header('x-auth-token')
+  let token = req.header('x-auth-token')
 
   if (!token) {
     return next(new ErrorResponse('No token, authorization denied', 401))
+  } else if (req.cookies.token) {
+    token = req.cookies.token
   }
 
   try {
